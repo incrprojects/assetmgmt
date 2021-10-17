@@ -1,11 +1,11 @@
 <?php
-class Vendors
+class Customers
 {
-    //Get All Vendors
-  function getVendors()
+  //Get All Customers
+  function getCustomers()
   {
     global $conn;
-    $query = "SELECT * FROM tbl_vendor_master ORDER BY id DESC";
+    $query = "SELECT * FROM tbl_customer_master ORDER BY id DESC";
     $response = array();
     $result = mysqli_query($conn, $query);
     while ($row = mysqli_fetch_assoc($result)) {
@@ -15,11 +15,11 @@ class Vendors
     echo json_encode($response);
   }
 
-  //Get Vendor by id
-  function getVendorById($vendorid)
+  //Get Customer by id
+  function getCustomerById($customerid)
   {
     global $conn;
-    $query = "SELECT * FROM tbl_vendor_master where id=" . $vendorid;
+    $query = "SELECT * FROM tbl_customer_master where id=" . $customerid;
     $response = array();
     $result = mysqli_query($conn, $query);
     $rows = mysqli_num_rows($result);
@@ -35,29 +35,29 @@ class Vendors
     echo json_encode($response);
   }
 
-  //Save Vendor
-  function saveVendor($vendor)
+  //Save Customer
+  function saveCustomer($customer)
   {
     global $conn;
-    $query = "INSERT INTO tbl_vendor_master (name, address, contactno, emailid) VALUES ('" . $vendor->name . "', '" . $vendor->address . "', '" . $vendor->contactno . "', '" . $vendor->emailid . "')";
+    $query = "INSERT INTO tbl_customer_master (name, address, contactno, emailid) VALUES ('" . $customer->name . "', '" . $customer->address . "', '" . $customer->contactno . "', '" . $customer->emailid . "')";
     echo $result = mysqli_query($conn, $query);
     header('Content-Type: application/json');
   }
 
-  //Update Vendor
-  function updateVendor($vendor)
+  //Update Customer
+  function updateCustomer($customer)
   {
     global $conn;
-    $query = "UPDATE tbl_vendor_master SET name='" . $vendor->name . "', address='" . $vendor->address . "', contactno='" . $vendor->contactno . "', emailid='" . $vendor->emailid. "' WHERE id=$vendor->id.";
+    $query = "UPDATE tbl_customer_master SET name='" . $customer->name . "', address='" . $customer->address . "', contactno='" . $customer->contactno . "', emailid='" . $customer->emailid. "' WHERE id = $customer->id.";
     echo $result = mysqli_query($conn, $query);
     header('Content-Type: application/json');
   }
 
-  //Delete Vendor
-  function deleteVendor($user_id)
+  //Delete Customer
+  function deleteCustomer($customerid)
   {
     global $conn;
-    $query = "DELETE FROM tbl_vendor_master WHERE id=" . $user_id;
+    $query = "DELETE FROM tbl_customer_master WHERE id=" . $customerid;
     echo $result = mysqli_query($conn, $query);
     header('Content-Type: application/json');
   }
