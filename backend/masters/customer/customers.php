@@ -1,9 +1,18 @@
 <?php
+require '../../../vendor/autoload.php';
+
+use Monolog\Handler\StreamHandler;
+use Monolog\Logger;
+
+
+
 class Customers
 {
   //Get All Customers
   function getCustomers()
   {
+	$logger = new Logger('main');
+	$logger->pushHandler(new StreamHandler('../../../logs/app.log', Logger::DEBUG));
     global $conn;
     $query = "SELECT * FROM tbl_customer_master ORDER BY id DESC";
     $response = array();
@@ -12,7 +21,16 @@ class Customers
       $response[] = $row;
     }
     header('Content-Type: application/json');
-    echo json_encode($response);
+	
+	
+	$returnData = [
+		"serviceCall" => "/customers",
+		"path" => "/masters/customers",
+		"requestId" => substr(md5(microtime()), 0, 10),
+		"data" => $response
+		];
+	$logger->info('Data :',$returnData);
+    echo json_encode($returnData);
   }
 
   //Get Customer by id
