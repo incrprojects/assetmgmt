@@ -1,3 +1,27 @@
 <?php
-$conn = mysqli_connect('us-cdbr-east-04.cleardb.com','b23bebf9cc8526','15cd97ea','heroku_9c3b7c41a04fbdb') or die(mysqli_error());
+//$conn = mysqli_connect('localhost','root','','asset_mgmt_db') or die(mysqli_error());
+
+?>
+<?php
+
+class Database {
+    private $db_host = "localhost";
+    // Change as required
+    private $db_user = "root";
+    // Change as required
+    private $db_pass = "";
+    // Change as required
+    private $db_name = "asset_mgmt_db";
+    // Change as required
+    // Function to make connection to database
+    public function connect() {
+        $connection = mysqli_connect($this->db_host, $this->db_user, $this->db_pass, $this->db_name);
+        return $connection;
+    }
+
+    public function disconnect($conn) {
+        mysqli_close($conn);
+    }
+}
+
 ?>

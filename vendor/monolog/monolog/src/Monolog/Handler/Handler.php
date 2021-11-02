@@ -1,4 +1,5 @@
-<?php declare(strict_types=1);
+<?php
+declare(strict_types = 1);
 
 /*
  * This file is part of the Monolog package.
@@ -8,7 +9,6 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-
 namespace Monolog\Handler;
 
 /**
@@ -16,38 +16,36 @@ namespace Monolog\Handler;
  *
  * @author Jordi Boggiano <j.boggiano@seld.be>
  */
-abstract class Handler implements HandlerInterface
-{
+
+abstract class Handler implements HandlerInterface {
+    
     /**
      * {@inheritDoc}
      */
-    public function handleBatch(array $records): void
-    {
-        foreach ($records as $record) {
+    public function handleBatch(array $records): void {
+
+        foreach($records as $record) {
             $this->handle($record);
         }
     }
-
+    
     /**
      * {@inheritDoc}
      */
-    public function close(): void
-    {
+    public function close(): void {
     }
 
-    public function __destruct()
-    {
+    public function __destruct() {
         try {
             $this->close();
-        } catch (\Throwable $e) {
+        }
+        catch(\Throwable $e) {
             // do nothing
         }
     }
 
-    public function __sleep()
-    {
+    public function __sleep() {
         $this->close();
-
         return array_keys(get_object_vars($this));
     }
 }

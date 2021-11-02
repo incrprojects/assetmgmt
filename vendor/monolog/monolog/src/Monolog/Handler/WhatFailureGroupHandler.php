@@ -1,4 +1,5 @@
-<?php declare(strict_types=1);
+<?php
+declare(strict_types = 1);
 
 /*
  * This file is part of the Monolog package.
@@ -8,7 +9,6 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-
 namespace Monolog\Handler;
 
 /**
@@ -19,47 +19,50 @@ namespace Monolog\Handler;
  *
  * @phpstan-import-type Record from \Monolog\Logger
  */
-class WhatFailureGroupHandler extends GroupHandler
-{
+
+class WhatFailureGroupHandler extends GroupHandler {
+    
     /**
      * {@inheritDoc}
      */
-    public function handle(array $record): bool
-    {
-        if ($this->processors) {
+    public function handle(array $record): bool {
+        if($this->processors) {
+            
             /** @var Record $record */
             $record = $this->processRecord($record);
         }
 
-        foreach ($this->handlers as $handler) {
+        foreach($this->handlers as $handler) {
             try {
                 $handler->handle($record);
-            } catch (\Throwable $e) {
+            }
+            catch(\Throwable $e) {
                 // What failure?
             }
         }
-
         return false === $this->bubble;
     }
-
+    
     /**
      * {@inheritDoc}
      */
-    public function handleBatch(array $records): void
-    {
-        if ($this->processors) {
+    public function handleBatch(array $records): void {
+        if($this->processors) {
             $processed = array();
-            foreach ($records as $record) {
+
+            foreach($records as $record) {
                 $processed[] = $this->processRecord($record);
             }
+            
             /** @var Record[] $records */
             $records = $processed;
         }
 
-        foreach ($this->handlers as $handler) {
+        foreach($this->handlers as $handler) {
             try {
                 $handler->handleBatch($records);
-            } catch (\Throwable $e) {
+            }
+            catch(\Throwable $e) {
                 // What failure?
             }
         }

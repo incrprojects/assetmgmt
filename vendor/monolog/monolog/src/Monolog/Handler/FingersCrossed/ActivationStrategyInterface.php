@@ -1,4 +1,5 @@
-<?php declare(strict_types=1);
+<?php
+declare(strict_types = 1);
 
 /*
  * This file is part of the Monolog package.
@@ -8,7 +9,6 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-
 namespace Monolog\Handler\FingersCrossed;
 
 /**
@@ -18,8 +18,8 @@ namespace Monolog\Handler\FingersCrossed;
  *
  * @phpstan-import-type Record from \Monolog\Logger
  */
-interface ActivationStrategyInterface
-{
+interface ActivationStrategyInterface {
+    
     /**
      * Returns whether the given record activates the handler.
      *

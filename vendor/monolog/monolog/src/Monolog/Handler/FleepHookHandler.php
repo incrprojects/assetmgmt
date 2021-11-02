@@ -1,4 +1,5 @@
-<?php declare(strict_types=1);
+<?php
+declare(strict_types = 1);
 
 /*
  * This file is part of the Monolog package.
@@ -8,9 +9,7 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-
 namespace Monolog\Handler;
-
 use Monolog\Formatter\FormatterInterface;
 use Monolog\Formatter\LineFormatter;
 use Monolog\Logger;
@@ -25,17 +24,16 @@ use Monolog\Logger;
  *
  * @phpstan-import-type FormattedRecord from AbstractProcessingHandler
  */
-class FleepHookHandler extends SocketHandler
-{
+
+class FleepHookHandler extends SocketHandler {
     protected const FLEEP_HOST = 'fleep.io';
-
     protected const FLEEP_HOOK_URI = '/hook/';
-
+    
     /**
      * @var string Webhook token (specifies the conversation where logs are sent)
      */
     protected $token;
-
+    
     /**
      * Construct a new Fleep.io Handler.
      *
@@ -45,18 +43,15 @@ class FleepHookHandler extends SocketHandler
      * @param  string                    $token  Webhook token
      * @throws MissingExtensionException
      */
-    public function __construct(string $token, $level = Logger::DEBUG, bool $bubble = true)
-    {
-        if (!extension_loaded('openssl')) {
+    public function __construct(string $token, $level = Logger::DEBUG, bool $bubble = true) {
+        if(!extension_loaded('openssl')) {
             throw new MissingExtensionException('The OpenSSL PHP extension is required to use the FleepHookHandler');
         }
-
         $this->token = $token;
-
         $connectionString = 'ssl://' . static::FLEEP_HOST . ':443';
         parent::__construct($connectionString, $level, $bubble);
     }
-
+    
     /**
      * Returns the default formatter to use with this handler
      *
@@ -64,55 +59,45 @@ class FleepHookHandler extends SocketHandler
      *
      * @return LineFormatter
      */
-    protected function getDefaultFormatter(): FormatterInterface
-    {
+    protected function getDefaultFormatter(): FormatterInterface {
         return new LineFormatter(null, null, true, true);
     }
-
+    
     /**
      * Handles a log record
      */
-    public function write(array $record): void
-    {
+    public function write(array $record): void {
         parent::write($record);
         $this->closeSocket();
     }
-
+    
     /**
      * {@inheritDoc}
      */
-    protected function generateDataStream(array $record): string
-    {
+    protected function generateDataStream(array $record): string {
         $content = $this->buildContent($record);
-
-        return $this->buildHeader($content) . $content;
+        return $this->buildHeader($content). $content;
     }
-
+    
     /**
      * Builds the header of the API Call
      */
-    private function buildHeader(string $content): string
-    {
+    private function buildHeader(string $content): string {
         $header = "POST " . static::FLEEP_HOOK_URI . $this->token . " HTTP/1.1\r\n";
         $header .= "Host: " . static::FLEEP_HOST . "\r\n";
         $header .= "Content-Type: application/x-www-form-urlencoded\r\n";
-        $header .= "Content-Length: " . strlen($content) . "\r\n";
+        $header .= "Content-Length: " . strlen($content). "\r\n";
         $header .= "\r\n";
-
         return $header;
     }
-
+    
     /**
      * Builds the body of API call
      *
      * @phpstan-param FormattedRecord $record
      */
-    private function buildContent(array $record): string
-    {
-        $dataArray = [
-            'message' => $record['formatted'],
-        ];
-
+    private function buildContent(array $record): string {
+        $dataArray =['message' => $record['formatted'],];
         return http_build_query($dataArray);
     }
 }

@@ -1,4 +1,5 @@
-<?php declare(strict_types=1);
+<?php
+declare(strict_types = 1);
 
 /*
  * This file is part of the Monolog package.
@@ -8,7 +9,6 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-
 namespace Monolog\Processor;
 
 /**
@@ -17,21 +17,18 @@ namespace Monolog\Processor;
  * @see Monolog\Processor\MemoryProcessor::__construct() for options
  * @author Rob Jensen
  */
-class MemoryUsageProcessor extends MemoryProcessor
-{
+
+class MemoryUsageProcessor extends MemoryProcessor {
+    
     /**
      * {@inheritDoc}
      */
-    public function __invoke(array $record): array
-    {
+    public function __invoke(array $record): array {
         $usage = memory_get_usage($this->realUsage);
-
-        if ($this->useFormatting) {
+        if($this->useFormatting) {
             $usage = $this->formatBytes($usage);
         }
-
         $record['extra']['memory_usage'] = $usage;
-
         return $record;
     }
 }

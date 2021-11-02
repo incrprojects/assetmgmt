@@ -1,4 +1,5 @@
-<?php declare(strict_types=1);
+<?php
+declare(strict_types = 1);
 
 /*
  * This file is part of the Monolog package.
@@ -8,9 +9,7 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-
 namespace Monolog\Handler;
-
 use Monolog\Formatter\FormatterInterface;
 
 /**
@@ -18,8 +17,8 @@ use Monolog\Formatter\FormatterInterface;
  *
  * @author Jordi Boggiano <j.boggiano@seld.be>
  */
-interface FormattableHandlerInterface
-{
+interface FormattableHandlerInterface {
+    
     /**
      * Sets the formatter.
      *
@@ -27,7 +26,7 @@ interface FormattableHandlerInterface
      * @return HandlerInterface   self
      */
     public function setFormatter(FormatterInterface $formatter): HandlerInterface;
-
+    
     /**
      * Gets the formatter.
      *

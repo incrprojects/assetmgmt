@@ -1,4 +1,5 @@
-<?php declare(strict_types=1);
+<?php
+declare(strict_types = 1);
 
 /*
  * This file is part of the Monolog package.
@@ -8,9 +9,7 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-
 namespace Monolog\Handler;
-
 use Elastica\Document;
 use Monolog\Formatter\FormatterInterface;
 use Monolog\Formatter\ElasticaFormatter;
@@ -34,81 +33,71 @@ use Elastica\Exception\ExceptionInterface;
  *
  * @author Jelle Vink <jelle.vink@gmail.com>
  */
-class ElasticaHandler extends AbstractProcessingHandler
-{
+
+class ElasticaHandler extends AbstractProcessingHandler {
+    
     /**
      * @var Client
      */
     protected $client;
-
+    
     /**
      * @var mixed[] Handler config options
      */
-    protected $options = [];
-
+    protected $options =[];
+    
     /**
      * @param Client  $client  Elastica Client object
      * @param mixed[] $options Handler configuration
      */
-    public function __construct(Client $client, array $options = [], $level = Logger::DEBUG, bool $bubble = true)
-    {
+    public function __construct(Client $client, array $options =[], $level = Logger::DEBUG, bool $bubble = true) {
         parent::__construct($level, $bubble);
         $this->client = $client;
-        $this->options = array_merge(
-            [
-                'index'          => 'monolog',      // Elastic index name
-                'type'           => 'record',       // Elastic document type
-                'ignore_error'   => false,          // Suppress Elastica exceptions
-            ],
-            $options
-        );
+        $this->options = array_merge(['index' => 'monolog', // Elastic index name
+        'type' => 'record', // Elastic document type
+        'ignore_error' => false, // Suppress Elastica exceptions
+       ], $options);
     }
-
+    
     /**
      * {@inheritDoc}
      */
-    protected function write(array $record): void
-    {
+    protected function write(array $record): void {
         $this->bulkSend([$record['formatted']]);
     }
-
+    
     /**
      * {@inheritDoc}
      */
-    public function setFormatter(FormatterInterface $formatter): HandlerInterface
-    {
-        if ($formatter instanceof ElasticaFormatter) {
+    public function setFormatter(FormatterInterface $formatter): HandlerInterface {
+        if($formatter instanceof ElasticaFormatter) {
             return parent::setFormatter($formatter);
         }
-
         throw new \InvalidArgumentException('ElasticaHandler is only compatible with ElasticaFormatter');
     }
-
+    
     /**
      * @return mixed[]
      */
-    public function getOptions(): array
-    {
+    public function getOptions(): array {
         return $this->options;
     }
-
+    
     /**
      * {@inheritDoc}
      */
-    protected function getDefaultFormatter(): FormatterInterface
-    {
+    protected function getDefaultFormatter(): FormatterInterface {
         return new ElasticaFormatter($this->options['index'], $this->options['type']);
     }
-
+    
     /**
      * {@inheritDoc}
      */
-    public function handleBatch(array $records): void
-    {
+    public function handleBatch(array $records): void {
         $documents = $this->getFormatter()->formatBatch($records);
         $this->bulkSend($documents);
     }
-
+    
     /**
      * Use Elasticsearch bulk API to send list of documents
      *
@@ -116,12 +105,12 @@ class ElasticaHandler extends AbstractProcessingHandler
      *
      * @throws \RuntimeException
      */
-    protected function bulkSend(array $documents): void
-    {
+    protected function bulkSend(array $documents): void {
         try {
             $this->client->addDocuments($documents);
-        } catch (ExceptionInterface $e) {
-            if (!$this->options['ignore_error']) {
+        }
+        catch(ExceptionInterface $e) {
+            if(!$this->options['ignore_error']) {
                 throw new \RuntimeException("Error sending messages to Elasticsearch", 0, $e);
             }
         }

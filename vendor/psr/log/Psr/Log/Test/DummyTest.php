@@ -1,5 +1,4 @@
 <?php
-
 namespace Psr\Log\Test;
 
 /**
@@ -9,10 +8,10 @@ namespace Psr\Log\Test;
  *
  * @internal
  */
-class DummyTest
-{
-    public function __toString()
-    {
+
+class DummyTest {
+
+    public function __toString() {
         return 'DummyTest';
     }
 }
